@@ -147,6 +147,57 @@ def indexExtractor(x, t):
 for _ in range(Q):
     order = input().split()
     # print(order)
+    cur_t = int(order[1])
+    del_seat = []
+    del_table = []
+
+    # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
+    for customer in seats.keys():
+        # 최신 식사 정보를 불러온다.
+        x, n, eatStart, t = seats[customer]
+        
+        # t일 때 x는 eatStart였다.
+        eatEnd = indexExtractor(x, cur_t)
+        # print(customer)
+        # print(eatEnd, eatStart)
+        # 그렇다면 이제 eatStart부터 eatEnd 사이동안 냠냠 먹으면 된다!
+        # 하지만 회전이 덜 되서 eatEnd가 eatStart보다 작다면
+        # eatEnd~eatStart 사이에 초밥이 있는지 확인하면 되고,
+        # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
+        # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
+        # 있는 것은 모두 게걸스럽게 먹어버리자.
+        if cur_t-t >= L:
+            # 한바퀴를 넘었다면
+            # 있는 스시를 다 먹어치우자!
+            if sushi_status[customer] != {} and sushi_status[customer] != 0:
+                del_table.append(customer)
+                n -= sushi_status[customer]
+                total_sushi -= sushi_status[customer]
+                sushi_status[customer] = 0
+        else:
+            # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
+            for eatdex in table[customer].keys():
+                if eatEnd > eatStart:
+                    if eatdex < eatStart or eatdex >=eatEnd:
+                        n = eatSushi(eatdex, customer, n)
+                elif eatEnd == eatStart:
+                    if eatdex == eatEnd:
+                        n = eatSushi(eatdex, customer, n)
+                else:
+                    if eatEnd <= eatdex <= eatStart:
+                        n = eatSushi(eatdex, customer, n)
+            # 먹어야할 스시를 다 먹었다면
+        if n == 0:
+            # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
+            del_seat.append(customer)
+            continue
+
+        seats[customer] = [x, n, eatEnd, cur_t]
+        
+    for gone in del_seat:
+        del seats[gone]
+        people -= 1
+    
     # 명령어가 100인 경우, table에 초밥을 추가한다.
     if order[0] == '100':
         _, t, x, name = order
@@ -164,74 +215,30 @@ for _ in range(Q):
         except:
             sushi_status[name] = 1
         total_sushi += 1
-    else:
-        # 명령어가 200인 경우, seat에 사람을 추가한다.
-        if order[0] == '200':
-            _, t, x, name, n = order
-            t, x, n = map(int, [t, x, n])
-            # 이때 저장해야 할 것은 다음과 같다.
-            # 앉은 자리/남은 먹은 개수/식사를 시작하는 자리/앉은 시각 순서로 저장한다.
-            seats[name] = [x, n, indexExtractor(x, t), t]
-            people += 1
-            # print(seats)
-    # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
-    cur_t = int(order[1])
-    del_seat = []
-    del_table = []
-    for customer in seats.keys():
-        # print(seats[customer])
-        x, n, eatStart, t = seats[customer]
-        
-        # t초 때 먹는 위치를 계산한다.
-        eatEnd = indexExtractor(x, cur_t)
-        # 그렇다면 이제 eatStart부터 eatEnd 사이동안 냠냠 먹으면 된다!
-        # 하지만 회전이 덜 되서 eatEnd가 eatStart보다 작다면
-        # eatEnd~eatStart 사이에 초밥이 있는지 확인하면 되고,
-        # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
-        # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
-        # 있는 것은 모두 게걸스럽게 먹어버리자.
-        # print("customer: ", customer)
-        # print("eatrange: ",eatEnd, eatStart)
-        # print()
-        if cur_t-t >= L:
-            # print('eat Them ALL')
-            # 한바퀴를 넘었다면
-            # 있는 스시를 다 먹어치우자!
-            if sushi_status[customer] != {} and sushi_status[customer] != 0:
-                del_table.append(customer)
-                n -= sushi_status[customer]
-                total_sushi -= sushi_status[customer]
-                sushi_status[customer] = 0
-        else:
-            # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
-            for eatdex in table[customer].keys():
-                # print(eatdex)
-                if eatEnd > eatStart:
-                    if eatdex < eatStart or eatdex >=eatEnd:
-                        # print('outside 냠냠')
-                        n = eatSushi(eatdex, customer, n)
-                        
-                elif eatEnd == eatStart:
-                    if eatdex == eatEnd:
-                        # print("놓자마자 냠냠")
-                        n = eatSushi(eatdex, customer, n)
-                else:
-                    if eatEnd <= eatdex < eatStart:
-                        # print('inside 냠냠')
-                        n = eatSushi(eatdex, customer, n)
-            # 먹어야할 스시를 다 먹었다면
+
+        # 스시를 놓자마자 바로 먹을 수 있는지 확인
+
+    elif order[0] == '200':
+        _, t, x, name, n = order
+        t, x, n = map(int, [t, x, n])
+        # 이때 저장해야 할 것은 다음과 같다.
+        # 앉은 자리/남은 먹은 개수/식사를 시작하는 자리/앉은 시각 순서로 저장한다.
+        # seats[name] = [x, n, indexExtractor(x, t), t]
+        extractIndex = indexExtractor(x, t)
+        people += 1
+
+        # 현재 위치한 index에 먹을 수 있는 초밥이 있는지 확인한다!
+        for eatdex in table[name].keys():
+            if eatdex == extractIndex:
+                n = eatSushi(eatdex, name, n)
         if n == 0:
-            # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
-            del_seat.append(customer)
+            people -= 1
             continue
-
-        seats[customer] = [x, n, eatEnd, cur_t]
-    # print(seats)
-    # print(table)
-    # print()
-    for gone in del_seat:
-        del seats[gone]
-        people -= 1
-
-    if order[0]=='300':
+            
+        seats[name] = [x, n, extractIndex, t] 
+    # if order[0]=='300'
+    else:
         print(people, total_sushi)
+    # print(table)
+    # print(seats)
+    # print()
