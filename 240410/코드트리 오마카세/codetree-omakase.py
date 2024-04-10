@@ -72,9 +72,7 @@ for _ in range(Q):
         cur_t = int(order[1])
         del_seat = []
         del_table = []
-        print(sushi_status)
         for customer in seats.keys():
-            print(customer)
             x, n, eatStart, t = seats[customer]
             
             # t초 때 먹는 위치를 계산한다.
@@ -90,7 +88,6 @@ for _ in range(Q):
                 # 한바퀴를 넘었다면
                 # 있는 스시를 다 먹어치우자!    
                 if sushi_status[name] != 0:
-                    print("다먹기")
                     del_table.append(name)
                     n -= sushi_status[name]
                     total_sushi -= sushi_status[name]
