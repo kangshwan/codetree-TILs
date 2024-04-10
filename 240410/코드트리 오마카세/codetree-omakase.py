@@ -223,7 +223,6 @@ for _ in range(Q):
         if n == 0:
             # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
             del_seat.append(customer)
-            del_table.append(customer)
             continue
 
         seats[customer] = [x, n, eatEnd, cur_t]
@@ -233,9 +232,6 @@ for _ in range(Q):
     for gone in del_seat:
         del seats[gone]
         people -= 1
-
-    for empty in del_table:
-        del table[empty]
 
     if order[0]=='300':
         print(people, total_sushi)
