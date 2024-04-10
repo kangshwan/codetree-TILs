@@ -50,9 +50,12 @@ for _ in range(Q):
         # 초밥의 위치를 key, 초밥의 개수를 value로 한다.
         try:
             table[name][indexExtractor(x, t)] += 1
-            sushi_status[name] += 1
+            
         except:
             table[name][indexExtractor(x, t)] = 1
+        try:
+            sushi_status[name] += 1
+        except:
             sushi_status[name] = 1
         total_sushi += 1
 
@@ -69,7 +72,9 @@ for _ in range(Q):
         cur_t = int(order[1])
         del_seat = []
         del_table = []
+        print(sushi_status)
         for customer in seats.keys():
+            print(customer)
             x, n, eatStart, t = seats[customer]
             
             # t초 때 먹는 위치를 계산한다.
@@ -84,9 +89,12 @@ for _ in range(Q):
             if cur_t-t > L:
                 # 한바퀴를 넘었다면
                 # 있는 스시를 다 먹어치우자!    
-                del_table.append(name)
-                n -= sushi_status[name]
-                total_sushi -= sushi_status[name]
+                if sushi_status[name] != 0:
+                    print("다먹기")
+                    del_table.append(name)
+                    n -= sushi_status[name]
+                    total_sushi -= sushi_status[name]
+                    sushi_status[name] = 0
             else:
                 # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
                 if eatEnd > eatStart:
