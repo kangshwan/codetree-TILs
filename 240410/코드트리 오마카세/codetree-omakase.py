@@ -206,6 +206,7 @@ input = sys.stdin.readline
 # L, Q 입력 받음
 L, Q = map(int, input().split())
 table = defaultdict(dict)
+sushi_status = defaultdict(dict)
 seats = defaultdict(dict)
 people, total_sushi = 0, 0
 
@@ -232,6 +233,7 @@ def eatSushi(index, name, to_eat):
     table[name][index] = 0
     total_sushi -= available_sushi
     to_eat -= available_sushi
+    sushi_status[name] -= available_sushi
     return to_eat
 
 # index Extractor는 위치 x와 시간 t일 때 설치해야하는 index를 반환한다.
@@ -250,9 +252,12 @@ for _ in range(Q):
         # 초밥의 위치를 key, 초밥의 개수를 value로 한다.
         try:
             table[name][indexExtractor(x, t)] += 1
+            sushi_status += 1
         except:
             table[name][indexExtractor(x, t)] = 1
+            sushi_status[name] = 1
         total_sushi += 1
+
     # 명령어가 200인 경우, seat에 사람을 추가한다.
     elif order[0] == '200':
         _, t, x, name, n = order
@@ -264,7 +269,8 @@ for _ in range(Q):
     else:
         # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
         cur_t = int(order[1])
-        del_list = []
+        del_seat = []
+        del_table = []
         for customer in seats.keys():
             x, n, eatStart, t = seats[customer]
             
@@ -280,8 +286,9 @@ for _ in range(Q):
             if cur_t-t > L:
                 # 한바퀴를 넘었다면
                 # 있는 스시를 다 먹어치우자!    
-                for eatdex in table[customer].keys():
-                    n = eatSushi(eatdex, customer, n)
+                del_table.append(name)
+                n -= sushi_status[name]
+                total_sushi -= sushi_status[name]
             else:
                 # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
                 if eatEnd > eatStart:
@@ -295,11 +302,12 @@ for _ in range(Q):
                 # 먹어야할 스시를 다 먹었다면
             if n == 0:
                 # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
-                del_list.append(customer)
+                del_seat.append(customer)
                 continue
             seats[customer] = [x, n, eatEnd, cur_t]
         for gone in del_list:
             del seats[gone]
-            del table[gone]
             people -= 1
+        for empty in del_table:
+            del table[empty]
         print(people, total_sushi)
