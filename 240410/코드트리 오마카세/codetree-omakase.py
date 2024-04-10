@@ -87,7 +87,7 @@ for _ in range(Q):
             if cur_t-t > L:
                 # 한바퀴를 넘었다면
                 # 있는 스시를 다 먹어치우자!
-                if sushi_status[customer] != 0:
+                if sushi_status[customer] != {} and sushi_status[customer] != 0:
                     del_table.append(customer)
                     n -= sushi_status[customer]
                     total_sushi -= sushi_status[customer]
