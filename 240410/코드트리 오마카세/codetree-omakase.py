@@ -305,7 +305,7 @@ for _ in range(Q):
                 del_seat.append(customer)
                 continue
             seats[customer] = [x, n, eatEnd, cur_t]
-        for gone in del_list:
+        for gone in del_seat:
             del seats[gone]
             people -= 1
         for empty in del_table:
