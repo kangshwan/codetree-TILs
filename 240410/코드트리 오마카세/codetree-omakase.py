@@ -60,8 +60,7 @@ for _ in range(Q):
         total_sushi += 1
 
     # 명령어가 200인 경우, seat에 사람을 추가한다.
-    else:
-        if order[0] == '200':
+    elif order[0] == '200':
             _, t, x, name, n = order
             t, x, n = map(int, [t, x, n])
             # 이때 저장해야 할 것은 다음과 같다.
@@ -69,49 +68,49 @@ for _ in range(Q):
             seats[name] = [x, n, indexExtractor(x, t), t]
             people += 1
         # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
-        cur_t = int(order[1])
-        del_seat = []
-        del_table = []
-        for customer in seats.keys():
-            x, n, eatStart, t = seats[customer]
-            
-            # t초 때 먹는 위치를 계산한다.
-            eatEnd = indexExtractor(x, cur_t)
+    cur_t = int(order[1])
+    del_seat = []
+    del_table = []
+    for customer in seats.keys():
+        x, n, eatStart, t = seats[customer]
+        
+        # t초 때 먹는 위치를 계산한다.
+        eatEnd = indexExtractor(x, cur_t)
 
-            # 그렇다면 이제 eatStart부터 eatEnd 사이동안 냠냠 먹으면 된다!
-            # 하지만 회전이 덜 되서 eatEnd가 eatStart보다 작다면
-            # eatEnd~eatStart 사이에 초밥이 있는지 확인하면 되고,
-            # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
-            # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
-            # 있는 것은 모두 게걸스럽게 먹어버리자.
-            if cur_t-t % L == 0:
-                # 한바퀴를 넘었다면
-                # 있는 스시를 다 먹어치우자!
-                if sushi_status[customer] != {} and sushi_status[customer] != 0:
-                    del_table.append(customer)
-                    n -= sushi_status[customer]
-                    total_sushi -= sushi_status[customer]
-                    sushi_status[customer] = 0
+        # 그렇다면 이제 eatStart부터 eatEnd 사이동안 냠냠 먹으면 된다!
+        # 하지만 회전이 덜 되서 eatEnd가 eatStart보다 작다면
+        # eatEnd~eatStart 사이에 초밥이 있는지 확인하면 되고,
+        # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
+        # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
+        # 있는 것은 모두 게걸스럽게 먹어버리자.
+        if cur_t-t > L:
+            # 한바퀴를 넘었다면
+            # 있는 스시를 다 먹어치우자!
+            if sushi_status[customer] != {} and sushi_status[customer] != 0:
+                del_table.append(customer)
+                n -= sushi_status[customer]
+                total_sushi -= sushi_status[customer]
+                sushi_status[customer] = 0
+        else:
+            # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
+            if eatEnd > eatStart:
+                for eatdex in table[customer].keys():
+                    if eatdex <= eatStart or eatdex >=eatEnd:
+                        n = eatSushi(eatdex, customer, n)
             else:
-                # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
-                if eatEnd > eatStart:
-                    for eatdex in table[customer].keys():
-                        if eatdex <= eatStart or eatdex >=eatEnd:
-                            n = eatSushi(eatdex, customer, n)
-                else:
-                    for eatdex in table[customer].keys():
-                        if eatEnd <= eatdex <= eatStart:
-                            n = eatSushi(eatdex, customer, n)
-                # 먹어야할 스시를 다 먹었다면
-            if n == 0:
-                # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
-                del_seat.append(customer)
-                continue
-            seats[customer] = [x, n, eatEnd, cur_t]
-        for gone in del_seat:
-            del seats[gone]
-            people -= 1
-        for empty in del_table:
-            del table[empty]
-        if order[0]=='300':
-            print(people, total_sushi)
+                for eatdex in table[customer].keys():
+                    if eatEnd <= eatdex <= eatStart:
+                        n = eatSushi(eatdex, customer, n)
+            # 먹어야할 스시를 다 먹었다면
+        if n == 0:
+            # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
+            del_seat.append(customer)
+            continue
+        seats[customer] = [x, n, eatEnd, cur_t]
+    for gone in del_seat:
+        del seats[gone]
+        people -= 1
+    for empty in del_table:
+        del table[empty]
+    if order[0]=='300':
+        print(people, total_sushi)
