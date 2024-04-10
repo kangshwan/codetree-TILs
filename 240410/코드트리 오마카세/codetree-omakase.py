@@ -60,14 +60,14 @@ for _ in range(Q):
         total_sushi += 1
 
     # 명령어가 200인 경우, seat에 사람을 추가한다.
-    elif order[0] == '200':
-        _, t, x, name, n = order
-        t, x, n = map(int, [t, x, n])
-        # 이때 저장해야 할 것은 다음과 같다.
-        # 앉은 자리/남은 먹은 개수/식사를 시작하는 자리/앉은 시각 순서로 저장한다.
-        seats[name] = [x, n, indexExtractor(x, t), t]
-        people += 1
-    elif order[0] == '300':
+    else:
+        if order[0] == '200':
+            _, t, x, name, n = order
+            t, x, n = map(int, [t, x, n])
+            # 이때 저장해야 할 것은 다음과 같다.
+            # 앉은 자리/남은 먹은 개수/식사를 시작하는 자리/앉은 시각 순서로 저장한다.
+            seats[name] = [x, n, indexExtractor(x, t), t]
+            people += 1
         # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
         cur_t = int(order[1])
         del_seat = []
@@ -113,4 +113,5 @@ for _ in range(Q):
             people -= 1
         for empty in del_table:
             del table[empty]
-        print(people, total_sushi)
+        if order[0]=='300':
+            print(people, total_sushi)
