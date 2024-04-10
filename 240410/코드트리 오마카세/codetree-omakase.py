@@ -86,12 +86,12 @@ for _ in range(Q):
             # 있는 것은 모두 게걸스럽게 먹어버리자.
             if cur_t-t > L:
                 # 한바퀴를 넘었다면
-                # 있는 스시를 다 먹어치우자!    
-                if sushi_status[name] != 0:
-                    del_table.append(name)
-                    n -= sushi_status[name]
-                    total_sushi -= sushi_status[name]
-                    sushi_status[name] = 0
+                # 있는 스시를 다 먹어치우자!
+                if sushi_status[customer] != 0:
+                    del_table.append(customer)
+                    n -= sushi_status[customer]
+                    total_sushi -= sushi_status[customer]
+                    sushi_status[customer] = 0
             else:
                 # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
                 if eatEnd > eatStart:
