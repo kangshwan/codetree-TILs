@@ -84,7 +84,7 @@ for _ in range(Q):
             # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
             # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
             # 있는 것은 모두 게걸스럽게 먹어버리자.
-            if cur_t-t > L:
+            if cur_t-t % L == 0:
                 # 한바퀴를 넘었다면
                 # 있는 스시를 다 먹어치우자!
                 if sushi_status[customer] != {} and sushi_status[customer] != 0:
