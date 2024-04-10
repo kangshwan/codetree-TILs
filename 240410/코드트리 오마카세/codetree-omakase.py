@@ -261,47 +261,45 @@ for _ in range(Q):
         # 앉은 자리/남은 먹은 개수/식사를 시작하는 자리/앉은 시각 순서로 저장한다.
         seats[name] = [x, n, indexExtractor(x, t), t]
         people += 1
-    # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
-    cur_t = int(order[1])
-    del_list = []
-    for customer in seats.keys():
-        x, n, eatStart, t = seats[customer]
-        
-        # t초 때 먹는 위치를 계산한다.
-        eatEnd = indexExtractor(x, cur_t)
+    else:
+        # 먹을 수 있는 사람이 있으면 먹는다 -> seats를 순회하며 먹을 것이 있는지 확인한다!
+        cur_t = int(order[1])
+        del_list = []
+        for customer in seats.keys():
+            x, n, eatStart, t = seats[customer]
+            
+            # t초 때 먹는 위치를 계산한다.
+            eatEnd = indexExtractor(x, cur_t)
 
-        # 그렇다면 이제 eatStart부터 eatEnd 사이동안 냠냠 먹으면 된다!
-        # 하지만 회전이 덜 되서 eatEnd가 eatStart보다 작다면
-        # eatEnd~eatStart 사이에 초밥이 있는지 확인하면 되고,
-        # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
-        # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
-        # 있는 것은 모두 게걸스럽게 먹어버리자.
-        if cur_t-t > L:
-            # 한바퀴를 넘었다면
-            # 있는 스시를 다 먹어치우자!    
-            for eatdex in table[customer].keys():
-                n = eatSushi(eatdex, customer, n)
-        else:
-            # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
-            if eatEnd > eatStart:
+            # 그렇다면 이제 eatStart부터 eatEnd 사이동안 냠냠 먹으면 된다!
+            # 하지만 회전이 덜 되서 eatEnd가 eatStart보다 작다면
+            # eatEnd~eatStart 사이에 초밥이 있는지 확인하면 되고,
+            # 회전이 많이 되서 eatEnd가 eatStart보다 크다면
+            # 0~eatStart, eatEnd~L-1 사이에 있는 경우 먹으면 된다!
+            # 있는 것은 모두 게걸스럽게 먹어버리자.
+            if cur_t-t > L:
+                # 한바퀴를 넘었다면
+                # 있는 스시를 다 먹어치우자!    
                 for eatdex in table[customer].keys():
-                    if eatdex <= eatStart or eatdex >=eatEnd:
-                        n = eatSushi(eatdex, customer, n)
+                    n = eatSushi(eatdex, customer, n)
             else:
-                for eatdex in table[customer].keys():
-                    if eatEnd <= eatdex <= eatStart:
-                        n = eatSushi(eatdex, customer, n)
-            # 먹어야할 스시를 다 먹었다면
-        if n == 0:
-            # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
-            del_list.append(customer)
-            continue
-        seats[customer] = [x, n, eatEnd, cur_t]
-    for gone in del_list:
-        del seats[gone]
-        del table[gone]
-        people -= 1
-
-
-    if order[0] == '300':
+                # 한바퀴를 넘지 않았다면, 위 eatEnd와 eatStart 조건에 맞는 eatdex만 먹는다.
+                if eatEnd > eatStart:
+                    for eatdex in table[customer].keys():
+                        if eatdex <= eatStart or eatdex >=eatEnd:
+                            n = eatSushi(eatdex, customer, n)
+                else:
+                    for eatdex in table[customer].keys():
+                        if eatEnd <= eatdex <= eatStart:
+                            n = eatSushi(eatdex, customer, n)
+                # 먹어야할 스시를 다 먹었다면
+            if n == 0:
+                # 지우기 리스트에 저장한다. (없어도 될 것 같긴한데, loop 돌 떄 부담이 될까 두려워~)
+                del_list.append(customer)
+                continue
+            seats[customer] = [x, n, eatEnd, cur_t]
+        for gone in del_list:
+            del seats[gone]
+            del table[gone]
+            people -= 1
         print(people, total_sushi)
