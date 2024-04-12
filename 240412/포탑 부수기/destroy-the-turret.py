@@ -71,8 +71,8 @@ dy = [1,0,-1,0,1,-1,1,-1]
 # N, M, K 입력.
 N,M,K = map(int, input().split())
 board = []
-broken = [[False for _ in range(N)] for _ in range(M)]
-attackTime=[[-1 for _ in range(N)] for _ in range(M)]
+broken = [[False for _ in range(M)] for _ in range(N)]
+attackTime=[[-1 for _ in range(M)] for _ in range(N)]
 
 for x in range(N):
     row = list(map(int, input().split()))
@@ -137,7 +137,7 @@ def select():
 
 def lazerAttack(at, tg):
     # 레이저 공격 시도
-    visited = [[None for _ in range(N)] for _ in range(M)]
+    visited = [[None for _ in range(M)] for _ in range(N)]
     at_x, at_y= at
     tg_x, tg_y = tg
     power = board[at_x][at_y]
@@ -221,14 +221,19 @@ def repair():
             if not broken[x][y] and board[x][y] != 0:
                 board[x][y] += 1
 
+def printall():
+    for row in board:
+        print(row)
+    print()
+
 for t in range(K):
     attacker, target = select()
+    if attacker == target:
+        break
     at_x, at_y = attacker
-
     # 공격력 증가
     board[at_x][at_y] += N + M
     attack(attacker, target, t)
     repair()
-
 _, tg = select()
 print(board[tg[0]][tg[1]])
