@@ -20,12 +20,11 @@ int main() {
         cin >> command;
         if (command == 'L'){
             if(it != l.begin())
-                it++;
-            it--;
+                it--;
         }
         else if (command == 'R'){
             if(it != l.end())
-                it = l.erase(it);
+                it++;
         }
         else if (command == 'D'){
             if(it != l.end())
