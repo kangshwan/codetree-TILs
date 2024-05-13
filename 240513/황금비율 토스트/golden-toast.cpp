@@ -22,10 +22,12 @@ int main() {
             it--;
         }
         else if (command == 'R'){
-            it++;
+            if(it != l.begin())
+                it++;
         }
         else if (command == 'D'){
-            it = l.erase(it);
+            if(it != l.end())
+                it = l.erase(it);
         }
         else if (command == 'P'){
             char c;
