@@ -19,11 +19,13 @@ int main() {
     for(int i = 0 ; i < m ; i++){
         cin >> command;
         if (command == 'L'){
+            if(it != l.begin())
+                it++;
             it--;
         }
         else if (command == 'R'){
-            if(it != l.begin())
-                it++;
+            if(it != l.end())
+                it = l.erase(it);
         }
         else if (command == 'D'){
             if(it != l.end())
