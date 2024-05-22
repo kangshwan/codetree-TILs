@@ -17,11 +17,9 @@ void simulate(){
                 for(int col1 = 1 ; col1 <= M ; col1++){
                     // 현재 좌표에서 row1, col1 만큼의 크기를 잡았을 때 범위를 벗어나는지 확인
                     if(i+row1 > N or j+col1 > M) continue; //범위를 벗어났으므로 다시 row1, col1 선정
-                    int sum1 = 0;
                     // row1, col1이 선정 완료되었으므로, visited처리한다.
                     for(int x_idx = i ; x_idx < i+row1 ; x_idx++){
                         for(int y_idx = j ; y_idx < j+col1 ; y_idx++){
-                            sum1 += board[x_idx][y_idx];
                             visited1[x_idx][y_idx] = true;
                         }
                     }
@@ -41,14 +39,12 @@ void simulate(){
                                 for(int col2 = 1 ; col2 <= M ; col2++){
                                     //현재 좌표(k, l)에서 row2, col2만큼의 크기를 잡았을 때 범위를 벗어나는지 확인
                                     if(k+row2 > N or l+col2 > M) continue;
-                                    int sum2 = 0;
                                     for(int x_idx = k ; x_idx < k+row2 ; x_idx++){
                                         for(int y_idx = l ; y_idx < l+col2 ; y_idx++){
                                             if(visited1[x_idx][y_idx]){
                                                 flag = true;
                                                 break;
                                             }
-                                            sum2 += board[x_idx][y_idx];
                                             visited2[x_idx][y_idx] = true;
                                         }
                                         if(flag){
@@ -61,8 +57,14 @@ void simulate(){
                                             continue;
                                         }
                                     }
-                                    
-                                    ans = max(sum1+sum2, ans);
+                                    int sum = 0;
+                                    for(int a = 0 ; a < N ; a++){
+                                        for(int b = 0 ; b < M ; b++){
+                                            if(visited1[a][b]) sum += board[a][b];
+                                            else if(visited2[a][b]) sum += board[a][b];
+                                        }
+                                    }
+                                    ans = max(ans, sum);
                                     for(int x_idx = k ; x_idx < k+row2 ; x_idx++){
                                         for(int y_idx = l ; y_idx < l+col2 ; y_idx++){
                                             visited2[x_idx][y_idx] = false;
@@ -72,7 +74,7 @@ void simulate(){
                             }
                         }
                     }
-
+                    
                     //visited 초기화
                     for(int x_idx = i ; x_idx < i+row1 ; x_idx++){
                         for(int y_idx = j ; y_idx < j+col1 ; y_idx++){
