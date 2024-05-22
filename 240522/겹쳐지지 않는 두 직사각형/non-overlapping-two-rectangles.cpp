@@ -57,6 +57,16 @@ void simulate(){
                                             continue;
                                         }
                                     }
+                                    int secondflag = true;
+                                    for(int a = 0 ; a < N ; a++){
+                                        for(int b = 0 ; b < M ; b++){
+                                            if(visited2[a][b]){
+                                                secondflag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if(secondflag) continue;
                                     int sum = 0;
                                     for(int a = 0 ; a < N ; a++){
                                         for(int b = 0 ; b < M ; b++){
