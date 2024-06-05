@@ -15,6 +15,13 @@ bool seqChecker(){
 bool Movable(){
     // 비어있는 경우
     if(sequence.size() == 1) return true;
+    // 456456456
+    // 012345678
+    // 7 8
+    // 6 8
+    // 5 8
+    // 4 8
+    // 3 8
     int left_start = sequence.size()-2, right_start = sequence.size()-1;
     //45464
     //01234
@@ -38,6 +45,7 @@ bool Movable(){
             // if(seqChecker()) cout << "FUCKYOU\n";
             return false;
         }
+    }
     return true;
 }
 void Choose(int cnt){
