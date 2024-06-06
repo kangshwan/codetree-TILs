@@ -5,36 +5,27 @@ using namespace std;
 
 int N;
 int board[MAX_N][MAX_N];
-bool visited_row[MAX_N];
-bool visited_col[MAX_N];
+int visited[MAX_N];
 vector<int> permutation;
 
 int answer = 0;
 
-bool CanPaint(int num){
-    int x = num / N, y = num % N;
-    return !visited_row[x] and !visited_col[y];
-}
 void Choose(int cnt){
     if(cnt == N){
         int tmp = 0;
-        for(auto num: permutation){
-            int x = num / N, y = num % N;
-            tmp += board[x][y];
+        for(int i = 0 ; i < N ; i++){
+            tmp += board[i][permutation[i]];
         }
         answer = max(answer, tmp);
         return;
     }
-    for(int i = 0 ; i < N*N ; i++){
-        if(CanPaint(i)){
-            int x = i / N, y = i % N;
-            visited_row[x] = true;
-            visited_col[y] = true;
+    for(int i = 0 ; i < N ; i++){
+        if(!visited[i]){
+            visited[i] = true;
             permutation.push_back(i);
             Choose(cnt+1);
             permutation.pop_back();
-            visited_row[x] = false;
-            visited_col[y] = false;
+            visited[i] = false;
         }
     }
 
