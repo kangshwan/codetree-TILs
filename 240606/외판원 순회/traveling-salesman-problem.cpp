@@ -15,9 +15,14 @@ void Choose(int cnt){
         int start = 0;
         int dist = 0;
         for(auto next: paths){
-            if(matrix[start][next] == 0) return;
+            if(matrix[start][next] == 0){
+                return;
+            }
             dist += matrix[start][next];
             start = next;
+        }
+        if(matrix[start][0] == 0){
+            return;
         }
         dist += matrix[start][0];
         answer = min(answer, dist);
