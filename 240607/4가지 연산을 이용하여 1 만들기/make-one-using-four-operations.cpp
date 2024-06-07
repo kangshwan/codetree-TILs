@@ -65,7 +65,12 @@ void BFS(int x){
 
 int main() {
     cin >> N;
-    BFS(N);
+    if(N == 1){
+        cout << 0;
+    }
+    else{
+        BFS(N);
+    }
     return 0;
 }
 
