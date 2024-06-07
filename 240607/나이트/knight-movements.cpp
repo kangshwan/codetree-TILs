@@ -28,6 +28,10 @@ int main() {
     cin >> N;
     cin >> start_x >> start_y >> end_x >> end_y;
     start_x--; start_y--; end_x--; end_y--;
+    if(start_x == end_x and start_y == end_y){
+        cout << 0;
+        return 0;
+    }
     Q.push({start_x, start_y});
     visited[start_x][start_y] = 1;
     while(!Q.empty()){
