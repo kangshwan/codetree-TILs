@@ -4,13 +4,13 @@
 using namespace std;
 
 int N;
-int DP[MAX_N+1] = {0, 1, 2, 5};
+int DP[MAX_N+1] = {1, 1, 2, 5};
 int main() {
     cin >> N;
     for(int i = 4 ; i <= N ; i++){
         int tmp = 0;
         for(int j = 0 ; j <= i ; j++){
-            tmp += DP[i-j] * DP[j];
+            tmp += DP[i-j] * DP[j-1];
         }
         DP[i] = tmp;
     }
