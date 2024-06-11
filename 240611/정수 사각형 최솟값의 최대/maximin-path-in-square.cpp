@@ -23,7 +23,7 @@ int main() {
     }
     for(int i = 1 ; i < N ; i++){
         for(int j = 1 ; j < N ; j++){
-            DP[i][j] = min(max(DP[i-1][j], DP[i][j-1]), board[i][j])
+            DP[i][j] = min(max(DP[i-1][j], DP[i][j-1]), board[i][j]);
         }
     }
     cout << DP[N-1][N-1];
