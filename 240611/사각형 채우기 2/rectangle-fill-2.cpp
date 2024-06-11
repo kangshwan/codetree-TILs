@@ -1,5 +1,6 @@
 #include <iostream>
 #define MAX_N 1000
+#define MOD 10007
 
 using namespace std;
 
@@ -8,7 +9,7 @@ int N;
 int main() {
     cin >> N;
     for(int i = 3 ; i <= N ; i++){
-        DP[i] = DP[i-1] + DP[i-2]*2;
+        DP[i] = (DP[i-1] + DP[i-2]*2) % MOD;
     }
     cout << DP[N];
     return 0;
