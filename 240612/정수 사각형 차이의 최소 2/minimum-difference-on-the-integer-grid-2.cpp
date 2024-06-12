@@ -66,12 +66,23 @@ int main() {
             int upper_abs = absolute(upper), lower_abs = absolute(lower);
             if(upper_abs < lower_abs){
                 DP[i][j] = upper;
-            }else{
+            }else if (upper_abs > lower_abs){
                 DP[i][j] = lower;
+            }else{
+                if(upper.second < lower.second){
+                    DP[i][j] = upper;
+                }else if(upper.second > lower.second){
+                    DP[i][j] = lower;
+                }else{
+                    if(upper.first > lower.first){
+                        DP[i][j] = upper;
+                    }else{
+                        DP[i][j] = lower;
+                    }
+                }
             }
         }
     }
-    // cout << abs(DPh[N-1][N-1] - DPl[N-1][N-1]);
     // for(int i = 0 ; i < N ; i++){
     //     for(int j = 0 ; j < N ; j++){
     //         cout << '{' << DP[i][j].first << ", " << DP[i][j].second << "} ";
