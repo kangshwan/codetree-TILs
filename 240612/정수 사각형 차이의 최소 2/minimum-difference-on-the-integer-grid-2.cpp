@@ -73,12 +73,6 @@ int main() {
                     DP[i][j] = upper;
                 }else if(upper.second > lower.second){
                     DP[i][j] = lower;
-                }else{
-                    if(upper.first > lower.first){
-                        DP[i][j] = upper;
-                    }else{
-                        DP[i][j] = lower;
-                    }
                 }
             }
         }
