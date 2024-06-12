@@ -71,7 +71,7 @@ int main() {
             }else{
                 if(upper.second < lower.second){
                     DP[i][j] = upper;
-                }else(upper.second > lower.second){
+                }else{
                     DP[i][j] = lower;
                 }
             }
