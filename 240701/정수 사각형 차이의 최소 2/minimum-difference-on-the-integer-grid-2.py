@@ -7,9 +7,14 @@ dp = [[() for _ in range(N)] for _ in range(N)]
 for _ in range(N):
     board.append(list(map(int, input().split())))
 
+lowerbound = 3
+
 def find_max_min(before, num):
+    global lowerbound
     max_n, min_n = before
     if min_n <= num <= max_n:
+        if min_n > lowerbound:
+            lowerbound = min_n
         return before
     elif num < min_n:
         return (max_n, num)
@@ -21,12 +26,9 @@ for i in range(1, N):
     dp[0][i] = find_max_min(dp[0][i-1], board[0][i])
     dp[i][0] = find_max_min(dp[i-1][0], board[i][0])
 
-lowerbound = 3
 for i in range(1,N):
     for j in range(1, N):
         board_num = board[i][j]
-        if board_num < lowerbound:
-            board_num = lowerbound
         upper = find_max_min(dp[i-1][j], board_num)
         left = find_max_min(dp[i][j-1], board_num)
         # 최대값이 작을수록 유리
