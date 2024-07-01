@@ -17,8 +17,12 @@ def find_max_min(before, num):
             lowerbound = min_n
         return before
     elif num < min_n:
+        if num > lowerbound:
+            lowerbound = num
         return (max_n, num)
     else:
+        if min_n < lowerbound:
+            lowerbound = min_n
         return (num, min_n)
 
 dp[0][0] = (board[0][0], board[0][0])
