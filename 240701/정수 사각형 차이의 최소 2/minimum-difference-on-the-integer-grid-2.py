@@ -21,30 +21,29 @@ for i in range(1, N):
     dp[0][i] = find_max_min(dp[0][i-1], board[0][i])
     dp[i][0] = find_max_min(dp[i-1][0], board[i][0])
 
+lowerbound = 3
 for i in range(1,N):
     for j in range(1, N):
-        upper = find_max_min(dp[i-1][j], board[i][j])
-        left = find_max_min(dp[i][j-1], board[i][j])
-        if upper[1] > left[1]:
+        board_num = board[i][j]
+        if board_num < lowerbound:
+            board_num = lowerbound
+        upper = find_max_min(dp[i-1][j], board_num)
+        left = find_max_min(dp[i][j-1], board_num)
+        # 최대값이 작을수록 유리
+        if upper[0] < left[0]:
             dp[i][j] = upper
-        elif upper[1] < left[1]:
+            lowerbound = upper[1]
+        elif left[0] < upper[0]:
             dp[i][j] = left
+            lowerbound = left[1]
         else:
-            if upper[0] < left[0]:
+            # 최대값이 동일하다면, 최소값이 클수록 유리
+            if upper[1] > left[1]:
                 dp[i][j] = upper
+                lowerbound = upper[1]
             else:
                 dp[i][j] = left
-        # # 최대값이 작을수록 유리
-        # if upper[0] < left[0]:
-        #     dp[i][j] = upper
-        # elif left[0] < upper[0]:
-        #     dp[i][j] = left
-        # else:
-        #     # 최대값이 동일하다면, 최소값이 클수록 유리
-        #     if upper[1] > left[1]:
-        #         dp[i][j] = upper
-        #     else:
-        #         dp[i][j] = left
+                lowerbound = left[1]
 
 def calc_diff(data):
     return data[0] - data[1]
