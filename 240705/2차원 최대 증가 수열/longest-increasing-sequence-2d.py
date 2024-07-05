@@ -14,7 +14,7 @@ for x in range(N):
             for nx in range(x+1, N):
                 for ny in range(y+1, N):
                     if board[nx][ny] > board[x][y]:
-                        dp[nx][ny] = max(dp[nx][ny], dp[x][y] + 1)
+                        dp[nx][ny] = dp[x][y] + 1
 ans = -1
 for i in dp:
     ans = max(ans, max(i))
