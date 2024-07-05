@@ -19,11 +19,11 @@ def dup(line1, line2):
     elif s1 > s2 and e1 > e2:
         return False
     return True
-
 for idx in range(1, N):
     for prev in range(idx):
-        if not dup(lines[idx], lines[prev]):
+        print(lines[prev], lines[idx])
+        if not dup(lines[prev], lines[idx]):
             dp[idx] = max(dp[idx], dp[prev] + 1)
-        else:
-            dp[idx] = 1
+    if dp[idx] == 0:
+        dp[idx] = 1
 print(max(dp))
