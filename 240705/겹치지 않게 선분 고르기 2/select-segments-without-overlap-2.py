@@ -5,7 +5,7 @@ N = int(input())
 lines = []
 for _ in range(N):
     lines.append(tuple(map(int, input().split())))
-# lines.sort(key=lambda x: x[1])
+lines.sort(key=lambda x: x[1])
 lines.sort()
 # dp[i]는 i번째 막대를 선택 or 선택하지 않는 경우 가장 많이 고른 개수
 # 정렬을 이미 한번 진행했기 때문에, 중복됐다면 이전 막대들을 확인하여 최대를 찾는다.
@@ -24,4 +24,6 @@ for idx in range(1, N):
     for prev in range(idx):
         if not dup(lines[idx], lines[prev]):
             dp[idx] = max(dp[idx], dp[prev] + 1)
+        else:
+            dp[idx] = 1
 print(max(dp))
