@@ -21,7 +21,6 @@ def dup(line1, line2):
     return True
 for idx in range(1, N):
     for prev in range(idx):
-        print(lines[prev], lines[idx])
         if not dup(lines[prev], lines[idx]):
             dp[idx] = max(dp[idx], dp[prev] + 1)
     if dp[idx] == 0:
