@@ -2,22 +2,24 @@ import sys
 input = sys.stdin.readline
 N, M = map(int, input().split())
 A = list(map(int, input().split()))
-DP = [[0 for _ in range(10001)] for _ in range(10001)]
-for a in A:
-    DP[a][a] = 1
+DP = [[0 for _ in range(10001)] for _ in range(101)]
+val_to_idx = {}
+for i in range(N):
+    DP[i][A[i]] = 1
+    val_to_idx[A[i]] = i
+
 # 수열 A에 대해서, 각 수열을 앞에서 부터 순회한다
 for i in range(N):
     cur_a = A[i]
     for j in range(M+1):
         if j-cur_a > 0: 
             for idx in range(i): 
-                DP[cur_a][j] = DP[cur_a][j] or DP[A[idx]][j-cur_a]
+                DP[val_to_idx[cur_a]][j] = DP[val_to_idx[cur_a]][j] or DP[idx][j-cur_a]
         # DP[i-cur_a][i-cur_a]
 # print(0, [i for i in range(M+1)])
-# for i in range(10001):
-#     if i in A:
-#         print(i, DP[i][:M+1])
-if DP[A[-1]][M]:
+# for i in A:
+#     print(i, DP[val_to_idx[i]][:M+1])
+if DP[val_to_idx[A[-1]]][M]:
     print("Yes")
 else:
     print("No")
