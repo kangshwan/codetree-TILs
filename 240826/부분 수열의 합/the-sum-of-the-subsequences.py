@@ -11,18 +11,28 @@ for i in range(N):
 # 수열 A에 대해서, 각 수열을 앞에서 부터 순회한다
 for i in range(N):
     cur_a = A[i]
-    for j in range(M+1):
+    for j in range(cur_a+1,M+1):
         if j-cur_a > 0: 
             for idx in range(i): 
                 DP[val_to_idx[cur_a]][j] = DP[val_to_idx[cur_a]][j] or DP[idx][j-cur_a]
         # DP[i-cur_a][i-cur_a]
 # print(0, [i for i in range(M+1)])
 # for i in A:
-#     print(i, DP[val_to_idx[i]][:M+1])
-if DP[val_to_idx[A[-1]]][M]:
-    print("Yes")
+#     tmp = []
+#     for j in range(M+1):
+#         if DP[val_to_idx[i]][j]:
+#             tmp.append(j)
+#     print(i, tmp)
+for i in range(N):
+    if DP[i][M]:
+        print("Yes")
+        break
 else:
     print("No")
+# if DP[val_to_idx[A[-1]]][M]:
+#     print("Yes")
+# else:
+#     print("No")
 '''
 0  1  2  3  4  5  6  7  8  9 10 11 12
 0  1  1  1  1  1  1        1
