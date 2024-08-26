@@ -2,7 +2,7 @@ import sys
 input = sys.stdin.readline
 N, M = map(int, input().split())
 A = list(map(int, input().split()))
-DP = [[0 for _ in range(10001)] for _ in range(101)]
+DP = [[0 for _ in range(10001)] for _ in range(10001)]
 for a in A:
     DP[a][a] = 1
 # 수열 A에 대해서, 각 수열을 앞에서 부터 순회한다
