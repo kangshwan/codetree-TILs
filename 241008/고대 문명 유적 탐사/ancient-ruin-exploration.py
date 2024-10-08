@@ -95,6 +95,19 @@ def findBest():
                         best_loc = [x, y]
                         best_rot = rot
                         best_board = tmp_board
+                    elif rot == best_rot:
+                        if y < best_loc[1]:
+                            best_val = val
+                            best_loc = [x, y]
+                            best_rot = rot
+                            best_board = tmp_board
+                        elif y == best_loc[1]:
+                            if x < best_loc[0]:
+                                best_val = val
+                                best_loc = [x, y]
+                                best_rot = rot
+                                best_board = tmp_board
+                            
     board = best_board
     return best_val
 
