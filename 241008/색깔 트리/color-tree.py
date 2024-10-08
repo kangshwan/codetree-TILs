@@ -10,6 +10,22 @@ class Node:
         self.pId = 0
         self.childIds = []
 
+class ColorCount:
+    def __init__(self):
+        self.cnt = [0] * (COLOR_MAX + 1)
+    
+    def __add__(self, obj):
+        res = ColorCount()
+        for i in range(1, COLOR_MAX + 1):
+            res.cnt[i] = self.cnt[i] + obj.cnt[i]
+        return res
+
+    def score(self):
+        result = 0
+        for i in range(1, COLOR_MAX + 1):
+            result += 1 if self.cnt[i] else 0
+        return result * result
+
 nodes = [Node() for _ in range(MAX_ID)]
 isRoot = [False] * MAX_ID
 
@@ -31,6 +47,23 @@ def getColor(curr):
     else:
         return curr.color, curr.lastUpdate
     
+def getValue(curr, color, lastUpdate):
+    # 현재 update가 상위 랭크 update보다 크다면, 아래 모든 node color 변경
+    if lastUpdate < curr.lastUpdate:
+        lastUpdate = curr.lastUpdate
+        color = curr.color
+    
+    result = [0, ColorCount()] # score, 컬러 개수
+    result[1].cnt[color] = 1
+    
+    for childId in curr.childIds:
+        child = nodes[childId]
+
+        subResult = getValue(child, color, lastUpdate)
+        result[1] = result[1] + subResult[1]
+        result[0] += subResult[0]
+    result[0] += result[1].score()
+    return result
 
 if __name__ == "__main__":
     Q = int(input())
@@ -42,9 +75,11 @@ if __name__ == "__main__":
 
             if pId == -1:
                 isRoot[mId] = True
+
             if isRoot[mId] or canMakeChild(nodes[pId], 1):
                 nodes[mId].id = mId
                 nodes[mId].color = color
+                nodes[mId].maxDepth = maxDepth
                 nodes[mId].lastUpdate = i
                 nodes[mId].pId = pId
             
@@ -63,6 +98,7 @@ if __name__ == "__main__":
 
         elif T == 400:
             value = 0
-            # for i in range(1, MAX_ID):
-                # if isRoot[i]:
-                    # value += getValue()
+            for i in range(1, MAX_ID):
+                if isRoot[i]:
+                    value += getValue(nodes[i], nodes[i].color, nodes[i].lastUpdate)[0]
+            print(value)
