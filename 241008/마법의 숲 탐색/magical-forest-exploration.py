@@ -98,7 +98,7 @@ def Move(golem, method):
 def inForest(golem):
     # center의 colum이 3 이하면 범위를 벗어난 것.
     x, y = golem.center
-    return 3 <= x < R and 1 <= y < C-1
+    return 4 <= x < R and 1 <= y < C-1
 
 def moveElf(golem):
     visited = [[False for _ in range(C)]for _ in range(R)]
@@ -168,4 +168,10 @@ if __name__ == '__main__':
             answer += moveElf(golems[i])
         else:
             clearForest()
+        # print('='*20)
+        # for i in range(R):
+        #     for j in range(C):
+        #         print(forest[i][j], end = ' ')
+        #     print()
+        
     print(answer)
