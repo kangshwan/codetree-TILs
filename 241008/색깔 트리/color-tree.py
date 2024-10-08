@@ -1,4 +1,4 @@
-MAX_ID = 100001
+MAX_ID = 100005
 COLOR_MAX = 5
 
 class Node:
