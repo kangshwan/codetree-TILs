@@ -14,14 +14,20 @@ class Product():
         self.id = 0
         self.revenue = 0
         self.dest = 0
-        self.cost = INF
         self.exist = False
+        self.cost = 0
 
     def __bool__(self):
         return self.exist
-    
-    def __lt__(self, other):
-        return self.cost < other.cost
+
+    def __lt__(self, obj):
+        if self.cost == obj.cost:
+            return self.id < obj.id
+        return self.cost < obj.cost
+
+    def __repr__(self):
+        return f"id:{self.id}, cost: {self.cost}, exist:{self.exist}"
+
 products = []
 
 def dijkstra(start):
@@ -68,27 +74,29 @@ if __name__ == '__main__':
             product.id = productId
             product.revenue = revenue
             product.dest = dest
-
-            cost = revenue - costs[dest]
-            product.cost = -cost
             product.exist = True
-
+            product.cost = -(revenue - costs[dest])
+            # heappush
             heappush(products, product)
-            
-            
         elif T == 300:
             for i in range(len(products)):
                 if products[i].id == query[1]:
-                    del products[i]
-                    heapify(products)
+                    products[i].exist = False
                     break
-
         elif T == 400:
+            # 판매를 한큐에 끝내야됨. 무지 많기 때문!
+            # products를 heap으로 바꾸고, heap에서 뽑았을 때 exist가 True인 것들에 대해서만 체크를 진행하면 되겠구나!
             if products:
                 best_product = products[0]
+                # 이미 제거된 product인 경우
                 while not best_product.exist:
-                    best_product = heappop(products)
-                if best_product.cost > 0:
+                    heappop(products)
+                    if not products:
+                        break
+                    best_product = products[0]
+                if not best_product.exist:
+                    print(-1)
+                elif best_product.cost > 0:
                     print(-1)
                 else:
                     print(best_product.id)
@@ -98,7 +106,6 @@ if __name__ == '__main__':
 
         elif T == 500:
             dijkstra(query[1])
-            for i in range(len(products)):
-                cost = products[i].revenue - costs[products[i].dest]
-                products[i].cost = -cost
+            for product in products:
+                product.cost = -(product.revenue - costs[product.dest])
             heapify(products)
