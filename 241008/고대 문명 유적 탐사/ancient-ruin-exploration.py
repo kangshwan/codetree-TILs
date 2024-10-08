@@ -1,3 +1,5 @@
+# 대충 10시 언저리 시작함
+# 11:40분 완료
 from collections import deque
 MAX_K = 15
 MAX_M = 305
@@ -77,8 +79,9 @@ def findBest():
     best_loc = [0, 0]
     best_rot = 0
     best_board = []
-    for x in range(1, 4):
-        for y in range(1, 4):
+
+    for y in range(1, 4):
+        for x in range(1, 4):
             for rot in rotation:
                 newBoard = copyBoard()
 
@@ -95,18 +98,6 @@ def findBest():
                         best_loc = [x, y]
                         best_rot = rot
                         best_board = tmp_board
-                    elif rot == best_rot:
-                        if y < best_loc[1]:
-                            best_val = val
-                            best_loc = [x, y]
-                            best_rot = rot
-                            best_board = tmp_board
-                        elif y == best_loc[1]:
-                            if x < best_loc[0]:
-                                best_val = val
-                                best_loc = [x, y]
-                                best_rot = rot
-                                best_board = tmp_board
                             
     board = best_board
     return best_val
