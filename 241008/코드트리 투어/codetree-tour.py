@@ -14,12 +14,15 @@ class Product():
         self.id = 0
         self.revenue = 0
         self.dest = 0
+        self.cost = INF
         self.exist = False
 
     def __bool__(self):
         return self.exist
-
-products = [Product() for _ in range(MAX_ID)]
+    
+    def __lt__(self, other):
+        return self.cost < other.cost
+products = []
 
 def dijkstra(start):
     for i in range(N):
@@ -61,27 +64,41 @@ if __name__ == '__main__':
         elif T == 200:
             # id, revenue, dest
             productId, revenue, dest = query[1:]
-            products[productId].id = productId
-            products[productId].revenue = revenue
-            products[productId].dest = dest
-            products[productId].exist = True
+            product = Product()
+            product.id = productId
+            product.revenue = revenue
+            product.dest = dest
 
+            cost = revenue - costs[dest]
+            product.cost = -cost
+            product.exist = True
+
+            heappush(products, product)
+            
+            
         elif T == 300:
-            products[query[1]].exist = False
+            for i in range(len(products)):
+                if products[i].id == query[1]:
+                    del products[i]
+                    heapify(products)
+                    break
 
         elif T == 400:
-            best_id = -1
-            best_price = -1
-            for i in range(1, MAX_ID):
-                if products[i]:
-                    price = products[i].revenue - costs[products[i].dest]
-                    if price > best_price:
-                        best_id = i
-                        best_price = price
-                        
-            if best_id != -1:
-                products[best_id].exist = False
+            if products:
+                best_product = products[0]
+                while not best_product.exist:
+                    best_product = heappop(products)
+                if best_product.cost > 0:
+                    print(-1)
+                else:
+                    print(best_product.id)
+                    heappop(products)
+            else:
+                print(-1)
 
-            print(best_id)
         elif T == 500:
             dijkstra(query[1])
+            for i in range(len(products)):
+                cost = products[i].revenue - costs[products[i].dest]
+                products[i].cost = -cost
+            heapify(products)
