@@ -11,48 +11,102 @@ board = []
 knight_board = [[0 for _ in range(MAX_L)] for _ in range(MAX_L)]
 origin_health = [0 for _ in range(MAX_N)]
 knights = [0 for _ in range(MAX_N)]
-
+pushed = [False for _ in range(MAX_N)]
 L, N = 0, 0
 
 def inRange(x, y):
     return 0 <= x < L and 0 <= y < L
 
+def push(x, y, dir):
+    # print(f"Push DIR: {dir}")
+    push_list = deque()
+    push_list.append((knight_board[x][y], x, y))
+    next_knight_board = [[0 for _ in range(L)] for _ in range(L)]
+
+    while push_list:
+        visited = [[False for _ in range(L)] for _ in range(L)]
+        id, x, y = push_list.popleft()
+        if visited[x][y]:
+            continue
+        # print((id, x, y))
+        Q = deque()
+        Q.append((id, x, y))
+        visited[x][y] = True
+        # print("INTO QUEUE")
+        while Q:
+            k_num, cx, cy = Q.popleft()
+            pushed[k_num]=True
+            # print((k_num, cx, cy))
+            for d in range(4):
+                nx, ny = cx + dx[d], cy + dy[d]
+                # print(nx, ny)
+                # 범위 밖, 방문함, 벽인 경우는 무시
+                if not inRange(nx, ny):
+                    # print("NOT IN RANGE")
+                    if d == dir:
+                        return False
+                    continue
+
+                if board[nx][ny] == 2:
+                    # print("WALL")
+                    if d == dir:
+                        # print("CANT MOVE")
+                        return False
+                    continue
+
+                
+
+                # push하는 방향이라면
+                if d == dir:
+                    # next_knight_board 업데이트
+                    next_knight_board[nx][ny] = id
+                    # push한 위치에 다른 기사가 있다면
+                    if knight_board[nx][ny] != 0 and knight_board[nx][ny] != id:
+                        if not visited[nx][ny]:
+                            push_list.append((knight_board[nx][ny], nx, ny))
+                    # push한 위치가 벽이라면
+                    if board[nx][ny] == 2:
+                        return False
+                
+                if visited[nx][ny]:
+                    # print("VISITED")
+                    continue
+
+                if knight_board[nx][ny] == id:
+                    Q.append((knight_board[nx][ny], nx, ny))
+                    visited[nx][ny] = True
+
+    for i in range(L):
+        for j in range(L):
+            if pushed[knight_board[i][j]]:
+                knight_board[i][j] = 0
+
+    for i in range(L):
+        for j in range(L):
+            if next_knight_board[i][j] != 0:
+                knight_board[i][j] = next_knight_board[i][j]
+
+    return True
+
 def makeMove(id, dir):
-    global knight_board
-    push_list = set([])
+    global knight_board, pushed
+    for i in range(N+1):
+        pushed[i] = False
+
     for x in range(L):
         for y in range(L):
             if knight_board[x][y] == id:
-                visited = [[False for _ in range(L)] for _ in range(L)]
-                next_knight_board = [[0 for _ in range(L)] for _ in range(L)]
-                Q = deque()
-                Q.append((id, x, y))
-                visited[x][y] = True
-                while Q:
-                    k_num, cx, cy = Q.popleft()
-                    push_list.add(k_num)
-                    # dir 방향으로 이동이 가능한지 확인
-                    nx, ny = cx + dx[dir], cy + dy[dir]
-                    if inRange(nx, ny) and board[nx][ny] != 2:
-                        next_knight_board[nx][ny] = k_num
-                    else:
-                        #push 불가능
-                        return False
+                return push(x, y, dir)
 
-                    for d in range(4):
-                        nx, ny = cx + dx[d], cy + dy[d]
-                        if inRange(nx, ny) and not visited[nx][ny] and board[nx][ny] != 2 and knight_board[nx][ny] != 0:
-                            Q.append((knight_board[nx][ny], nx, ny))
-                            visited[nx][ny] = True
-                knight_board = next_knight_board
-                return True
-    
+
 def checkHurt(id):
     visited = [[False for _ in range(L)] for _ in range(L)]
     for x in range(L):
         for y in range(L):
             if knight_board[x][y] != 0 and knight_board[x][y] != id:
                 knight_id = knight_board[x][y]
+                if not pushed[knight_id]:
+                    continue
                 if knights[knight_id] != 0 and board[x][y] == 1:
                     knights[knight_id] -= 1
                 if knights[knight_id] == 0:
@@ -68,11 +122,20 @@ def checkHurt(id):
                                 visited[nx][ny] = True
                                 knight_board[nx][ny] = 0
                                 Q.append((nx, ny))
-                            
+
+def printBoard():
+    print('='*10)
+    for i in range(L):
+        for j in range(L):
+            print(knight_board[i][j], end=' ')
+        print()
+    print('='*10)
+
 if __name__=='__main__':
     L, N, Q = map(int, input().split())
     for _ in range(L):
         board.append(list(map(int, input().split())))
+
     for i in range(1, N+1):
         r, c, h, w, k = map(int, input().split())
         knights[i] = k
@@ -81,12 +144,12 @@ if __name__=='__main__':
         for x in range(h):
             for y in range(w):
                 knight_board[r + x][c + y] = i
-
+    # printBoard()
     for _ in range(Q):
         k_num, d = map(int, input().split())
-        
         if knights[k_num] and makeMove(k_num, d):
             checkHurt(k_num)
+            # printBoard()
     answer = 0
     for i in range(1,N+1):
         if knights[i]:
