@@ -48,6 +48,7 @@ def makeMove(id, dir):
                 return True
     
 def checkHurt(id):
+    visited = [[False for _ in range(L)] for _ in range(L)]
     for x in range(L):
         for y in range(L):
             if knight_board[x][y] != 0 and knight_board[x][y] != id:
@@ -55,7 +56,6 @@ def checkHurt(id):
                 if knights[knight_id] != 0 and board[x][y] == 1:
                     knights[knight_id] -= 1
                 if knights[knight_id] == 0:
-                    visited = [[False for _ in range(L)] for _ in range(L)]
                     Q = deque()
                     Q.append((x, y))
                     visited[x][y] = True
