@@ -85,7 +85,7 @@ if __name__=='__main__':
     for _ in range(Q):
         k_num, d = map(int, input().split())
         
-        if makeMove(k_num, d):
+        if knights[k_num] and makeMove(k_num, d):
             checkHurt(k_num)
     answer = 0
     for i in range(1,N+1):
