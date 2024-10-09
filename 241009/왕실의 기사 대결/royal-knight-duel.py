@@ -1,7 +1,7 @@
 #2024.10.09 08:58 시작
 from collections import deque
 MAX_L = 45
-MAX_N = 30
+MAX_N = 35
 
 dx=[-1,0,1,0]
 dy=[0,1,0,-1]
