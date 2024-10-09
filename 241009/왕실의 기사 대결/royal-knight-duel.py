@@ -1,4 +1,6 @@
 #2024.10.09 08:58 시작
+#2024.10.09 11:34 종료
+#- 2시간 32분
 from collections import deque
 MAX_L = 45
 MAX_N = 35
