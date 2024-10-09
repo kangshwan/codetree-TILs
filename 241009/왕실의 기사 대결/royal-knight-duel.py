@@ -23,7 +23,6 @@ def makeMove(id, dir):
     for x in range(L):
         for y in range(L):
             if knight_board[x][y] == id:
-                print('in,',id)
                 visited = [[False for _ in range(L)] for _ in range(L)]
                 next_knight_board = [[0 for _ in range(L)] for _ in range(L)]
                 Q = deque()
@@ -83,14 +82,8 @@ if __name__=='__main__':
             for y in range(w):
                 knight_board[r + x][c + y] = i
 
-    for i in range(L):
-        for j in range(L):
-            print(knight_board[i][j], end=' ')
-        print()
-
     for _ in range(Q):
         k_num, d = map(int, input().split())
-        print(k_num)
         
         if makeMove(k_num, d):
             checkHurt(k_num)
