@@ -1,5 +1,6 @@
 # 2024.10.09 19:18 시작
-# 2024.10.09 20:48 1차 제출
+# 2024.10.09 20:48 1차 제출 - 시간초과
+# 2024.10.09 21:11 2차 제출
 from collections import deque
 
 MAX_N = 100005
@@ -31,37 +32,51 @@ rooms = [Node() for _ in range(MAX_N)]
 alarm = [0 for _ in range(MAX_N)]
 leafs = set()
 
-def updateTree():
-    global alarm
-    alarm = [0 for _ in range(MAX_N)]
+# def updateTree():
+#     global alarm
+#     alarm = [0 for _ in range(MAX_N)]
 
-    Q = deque()
-    visited = [0 for _ in range(MAX_N)]
+#     Q = deque()
+#     visited = [0 for _ in range(MAX_N)]
     
-    for leaf in leafs:
-        Q.append(leaf)
+#     for leaf in leafs:
+#         Q.append(leaf)
 
+#     while Q:
+#         curNode = Q.popleft()
+#         visited[curNode] += 1
+#         if visited[curNode] > 1:
+#             continue
+#         blocked = False
+#         power = rooms[curNode].power
+#         while power:
+#             pId = rooms[curNode].pId
+#             if pId == 0:
+#                 break
+#             if not blocked and not rooms[curNode].alarm:
+#                 blocked = True
+
+#             if not blocked:
+#                 alarm[pId] += 1
+#             Q.append(pId)
+#             curNode = pId
+#             power -= 1
+
+def countAlarm(node):
+    cnt = 0
+    Q = deque()
+    Q.append((1, node))
+    rootRank = 1
     while Q:
-        curNode = Q.popleft()
-        visited[curNode] += 1
-        if visited[curNode] > 1:
-            continue
-        blocked = False
-        power = rooms[curNode].power
-        while power:
-            pId = rooms[curNode].pId
-            if pId == 0:
-                break
-            if not blocked and not rooms[curNode].alarm:
-                blocked = True
-
-            if not blocked:
-                alarm[pId] += 1
-            Q.append(pId)
-            curNode = pId
-            power -= 1
-
-
+        rank, curNode = Q.popleft()
+        for child in rooms[curNode].children:
+            childRank = rank + 1
+            if not rooms[child].alarm:
+                continue
+            if childRank - rootRank <= rooms[child].power:
+                cnt += 1
+            Q.append((childRank, child))
+    return cnt
 
 if __name__ == "__main__":
     N, Q = map(int, input().split())
@@ -78,15 +93,15 @@ if __name__ == "__main__":
                 rooms[pId].children.append(idx+1)
             for idx, power in enumerate(query[N+1:]):
                 rooms[idx+1].power = power
-            updateTree()
+            # updateTree()
 
         elif T == 200:
             rooms[query[1]].updateAlarm()
-            updateTree()
+            # updateTree()
 
         elif T == 300:
             rooms[query[1]].updatePower(query[2])
-            updateTree()
+            # updateTree()
 
         elif T == 400:
             room1 = rooms[query[1]]
@@ -97,7 +112,7 @@ if __name__ == "__main__":
             room1.pId, room2.pId = room2.pId, room1.pId
             p_room1.updateChild(room1.id, room2.id)
             p_room2.updateChild(room2.id, room1.id)
-            updateTree()
+            # updateTree()
 
         elif T == 500:
-            print(alarm[query[1]])
+            print(countAlarm(query[1]))
