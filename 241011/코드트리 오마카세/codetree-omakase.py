@@ -14,12 +14,13 @@ querys = []
 L, Q = 0, 0
 
 peopleData = {}
-
+exit_time = {}
 def updateQuerys():
     # 일단 다 앉히기
     for query in querys:
         if query.cmd == 200:
             peopleData[query.name] = [query.t, query.x, query.n]
+            exit_time[query.name] = 0
     
     # 이제 초밥 언제 빠지는지 계산하기
     for i in range(Q):
@@ -46,9 +47,13 @@ def updateQuerys():
             peopleData[query.name][2] -= 1
             querys.append(Query(101, max(sitTime, query.t) + dist, -1, query.name, -1))
 
-            if eatAmount == 0:
-                querys.append(Query(202, max(sitTime, query.t) + dist, -1, query.name, -1))
-    
+            # if eatAmount == 0:
+            #     querys.append(Query(202, max(sitTime, query.t) + dist, -1, query.name, -1))
+            exit_time[query.name] = max(exit_time[query.name], max(sitTime, query.t) + dist)
+
+    for name, time in exit_time.items():
+        querys.append(Query(202, time, -1, name, -1))
+
     querys.sort(key=lambda x: (x.t, x.cmd))
 
 if __name__ == '__main__':
