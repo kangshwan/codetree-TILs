@@ -43,11 +43,11 @@ def updateQuerys():
                 else:
                     dist = sitLoc - curLoc
             eatAmount -= 1
-            peopleData[query.name] = [sitTime, sitLoc, eatAmount]
+            peopleData[query.name][2] -= 1
             querys.append(Query(101, max(sitTime, query.t) + dist, -1, query.name, -1))
 
             if eatAmount == 0:
-                querys.append(Query(202, max(sitTime, query.t) + dist, query.x, query.name, -1))
+                querys.append(Query(202, max(sitTime, query.t) + dist, -1, query.name, -1))
     
     querys.sort(key=lambda x: (x.t, x.cmd))
 
